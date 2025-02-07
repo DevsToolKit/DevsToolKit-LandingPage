@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import "../(styles)/contrastTool.css";
 import Website from "@/components/contrastTool/ui/Website";
 import { RiDiceFill } from "react-icons/ri";
-import { useSearchParams } from "next/navigation"; // Use `useSearchParams` only
+import { useSearchParams } from "next/navigation";
 
 function Page() {
   const searchParams = useSearchParams();
-  const debounceTimer = useRef(null); // Use ref to store debounce timer
+  const debounceTimer = useRef(null);
 
   const defaultColors = {
     text: "#333333",
@@ -91,7 +91,7 @@ function Page() {
     } else {
       updateURL(defaultColors);
     }
-  }, [searchParams]); // Run effect only when searchParams change
+  }, [searchParams, defaultColors]);
 
   return (
     <section className="w-full min-h-screen bg-white flex flex-col items-center p-5">
@@ -137,4 +137,11 @@ function Page() {
   );
 }
 
-export default Page;
+// Wrap the page with Suspense for client-side rendering
+export default function PageWithSuspense() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Page />
+    </Suspense>
+  );
+}
